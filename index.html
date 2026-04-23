@@ -4,188 +4,240 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Freedom to Live</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { min-height: 100vh; font-family: Georgia, 'Times New Roman', serif; background: #1a1a2e; color: #e0d5c0; overflow-x: hidden; }
-#pw-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, #6CA6CD, #87CEEB, #d6ebf5); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; text-align: center; padding: 20px; color: #222; }
-.portrait { width: 130px; height: 130px; border-radius: 50%; border: 5px solid #b8960c; background: #c4aa5a; display: flex; align-items: center; justify-content: center; font-size: 2.8rem; margin-bottom: 18px; box-shadow: 0 3px 12px rgba(0,0,0,0.25); }
-#pw-screen h2 { font-size: 1.6rem; margin-bottom: 6px; color: #1a1a2e; }
-#pw-screen .hint { color: #555; font-style: italic; margin-bottom: 18px; font-size: 0.95rem; }
-#pw-screen input { padding: 10px 18px; font-size: 1rem; border: 2px solid #b8960c; border-radius: 6px; text-align: center; font-family: Georgia, serif; width: 240px; }
-#pw-screen input:focus { outline: none; border-color: #7a6200; }
-.btn { margin-top: 12px; padding: 10px 30px; font-size: 1rem; background: #b8960c; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; }
-.btn:hover { background: #9a7d08; }
-.pw-err { color: #b00; margin-top: 8px; font-size: 0.9rem; min-height: 20px; }
-#game { display: none; }
-#phase1 { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 30px 18px; background: linear-gradient(to bottom, #1a1a2e, #12091e); }
-.card { max-width: 620px; width: 100%; text-align: center; }
-.card h1 { color: #c9a84c; font-size: 1.5rem; margin-bottom: 4px; }
-.stage-tag { font-size: 0.78rem; color: #7a6a50; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
-.card .sub { font-style: italic; color: #8a7a60; margin-bottom: 20px; font-size: 0.9rem; }
-.story { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.25); border-radius: 10px; padding: 22px; margin: 16px 0; text-align: left; line-height: 1.75; font-size: 0.95rem; }
-.story p { margin-bottom: 12px; }
-.story em { color: #c9a84c; }
-.journey-note { font-size: 0.82rem; color: #7a6a50; border-top: 1px solid rgba(122,106,80,0.25); padding-top: 10px; margin-top: 14px; font-style: italic; }
-.choices { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
-.choice { padding: 14px 18px; font-size: 0.93rem; font-family: Georgia, serif; border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; background: rgba(255,255,255,0.03); color: #e0d5c0; cursor: pointer; text-align: left; transition: border-color 0.3s, background 0.3s; line-height: 1.5; }
-.choice:hover { border-color: #c9a84c; background: rgba(201,168,76,0.06); }
-.choice.wrong { border-color: #a03030; background: rgba(160,48,48,0.08); }
-.choice.right { border-color: #3a8a3a; background: rgba(58,138,58,0.1); }
-.cfb { margin-top: 10px; font-style: italic; font-size: 0.88rem; min-height: 20px; line-height: 1.5; }
-.cfb.bad { color: #d07070; }
-.cfb.good { color: #6abf6a; }
-#phase2 { display: none; min-height: 100vh; background: linear-gradient(to bottom, #12091e, #1a1a2e, #12091e); padding: 30px 18px; flex-direction: column; align-items: center; }
-.decl-card { max-width: 660px; width: 100%; text-align: center; }
-.decl-card h1 { color: #c9a84c; font-size: 1.5rem; margin-bottom: 4px; }
-.decl-card .sub { font-style: italic; color: #8a7a60; margin-bottom: 20px; font-size: 0.9rem; }
-.decl-context { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; padding: 16px; margin-bottom: 20px; font-size: 0.9rem; color: #a09080; line-height: 1.6; text-align: left; }
-.decl-context em { color: #c9a84c; }
-.scroll-area { background: rgba(0,0,0,0.25); border: 2px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 25px 20px; margin: 16px 0; min-height: 180px; }
-.scroll-label { font-size: 0.78rem; color: #7a6a50; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
-.declaration-slots { display: flex; flex-direction: column; gap: 8px; min-height: 120px; }
-.decl-slot { padding: 10px 14px; border: 1px dashed rgba(201,168,76,0.25); border-radius: 6px; min-height: 42px; display: flex; align-items: center; font-style: italic; color: #5a4a3a; font-size: 0.88rem; transition: border-color 0.3s; }
-.decl-slot.filled { border-style: solid; border-color: rgba(201,168,76,0.4); color: #c9a84c; font-style: normal; cursor: pointer; background: rgba(201,168,76,0.05); }
-.decl-slot.filled:hover { background: rgba(201,168,76,0.1); }
-.fragment-bank { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 18px 0; padding: 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; background: rgba(255,255,255,0.02); }
-.fragment { padding: 8px 14px; background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3); color: #c9a84c; border-radius: 16px; font-size: 0.85rem; cursor: pointer; transition: transform 0.15s, opacity 0.2s; line-height: 1.4; }
-.fragment:hover { transform: scale(1.04); }
-.fragment.used { opacity: 0.2; cursor: default; }
-.decl-feedback { margin-top: 12px; font-weight: bold; min-height: 22px; font-size: 0.95rem; }
-.decl-feedback.no { color: #d07070; }
-.decl-feedback.yes { color: #6abf6a; }
-#fake-win { display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 30px 18px; text-align: center; color: #e0d5c0; background: #1a1a2e; position: relative; overflow: hidden; }
-.fake-box { background: rgba(201,168,76,0.04); border: 2px solid rgba(201,168,76,0.3); border-radius: 14px; padding: 40px 28px; max-width: 640px; width: 100%; position: relative; z-index: 2; }
-.fake-box h1 { font-size: 1.8rem; color: #c9a84c; margin-bottom: 15px; }
-.fake-box p { font-size: 0.95rem; line-height: 1.7; margin-bottom: 10px; color: #b0a090; }
-.win-quote { font-style: italic; font-size: 1.05rem; color: #c9a84c; margin: 20px 0; padding: 16px; border-left: 3px solid #c9a84c; text-align: left; line-height: 1.6; background: rgba(201,168,76,0.04); border-radius: 0 8px 8px 0; }
-.journey-map { background: rgba(0,0,0,0.2); border: 1px solid rgba(201,168,76,0.15); border-radius: 10px; padding: 18px; margin: 22px 0; text-align: left; font-size: 0.85rem; line-height: 1.7; color: #9a8a7a; }
-.journey-map .map-title { color: #c9a84c; font-weight: bold; margin-bottom: 10px; font-size: 0.9rem; }
-.journey-map .step { margin-bottom: 8px; padding-left: 12px; border-left: 2px solid rgba(201,168,76,0.2); }
-.journey-map .step strong { color: #c9a84c; }
-.journey-map .step.current { border-left-color: #6abf6a; }
-.journey-map .step.current strong { color: #6abf6a; }
-.congrats-text { font-size: 1.35rem; font-weight: bold; color: #c9a84c; margin-top: 28px; letter-spacing: 0.5px; line-height: 1.5; }
-.chain { position: absolute; opacity: 0; z-index: 1; animation: chainBreak 2.5s ease forwards; }
-@keyframes chainBreak { 0% { opacity: 0.6; transform: translateY(0) rotate(0deg) scale(1); } 50% { opacity: 0.3; } 100% { opacity: 0; transform: translateY(-220px) rotate(180deg) scale(0.2); } }
-#twist { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; color: #e0d5c0; }
-.twist-content { max-width: 580px; width: 100%; }
-.twist-content h1 { font-size: 1.6rem; color: #c9a84c; margin-bottom: 20px; }
-.twist-content p { font-size: 1rem; line-height: 1.7; margin-bottom: 14px; color: #b0a090; }
-.twist-content em { color: #c9a84c; }
-.final-link { display: inline-block; margin-top: 25px; padding: 16px 40px; font-size: 1.15rem; font-family: Georgia, serif; font-weight: bold; background: linear-gradient(135deg, #c9a84c, #b8960c); color: #1a1a2e; border: none; border-radius: 10px; cursor: pointer; text-decoration: none; letter-spacing: 1px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(201,168,76,0.3); }
-.final-link:hover { transform: scale(1.06); box-shadow: 0 6px 25px rgba(201,168,76,0.5); }
-.flicker { animation: flickerAnim 0.8s ease forwards; }
-@keyframes flickerAnim { 0% { opacity: 1; } 15% { opacity: 0; } 30% { opacity: 0.6; } 45% { opacity: 0; } 60% { opacity: 0.3; } 75% { opacity: 0; } 100% { opacity: 0; } }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slowReveal { from { opacity: 0; } to { opacity: 1; } }
-.fadein { animation: fadeUp 0.7s ease forwards; }
-.slow-reveal { animation: slowReveal 1.5s ease forwards; }
-@media (max-width: 600px) { .fragment { font-size: 0.8rem; padding: 6px 10px; } .decl-slot { font-size: 0.82rem; padding: 8px 10px; } }
-</style>
 </head>
-<body>
-<div id="pw-screen">
-<div class="portrait">&#x1F512;</div>
-<h2>Freedom to Live</h2>
-<p class="hint">enter the secret word from the last quest</p>
-<input type="text" id="pw" placeholder="password..." autocomplete="off" onkeypress="if(event.key==='Enter')tryPw()">
-<button class="btn" onclick="tryPw()">enter</button>
-<p class="pw-err" id="pw-err"></p>
+<body style="margin:0;padding:0;font-family:Georgia,serif;background:#1a1a2e;color:#e0d5c0;">
+
+<div id="pwScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(to bottom,#6CA6CD,#87CEEB,#d6ebf5);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;text-align:center;padding:20px;color:#222;">
+<div style="width:130px;height:130px;border-radius:50%;border:5px solid #b8960c;background:#c4aa5a;display:flex;align-items:center;justify-content:center;font-size:2.8rem;margin-bottom:18px;box-shadow:0 3px 12px rgba(0,0,0,0.25);">&#128274;</div>
+<h2 style="font-size:1.6rem;margin-bottom:6px;color:#1a1a2e;">Freedom to Live</h2>
+<p style="color:#555;font-style:italic;margin-bottom:18px;font-size:0.95rem;">enter the secret word from the last quest</p>
+<input type="text" id="pwInput" placeholder="password..." autocomplete="off" style="padding:10px 18px;font-size:1rem;border:2px solid #b8960c;border-radius:6px;text-align:center;font-family:Georgia,serif;width:240px;">
+<br>
+<button onclick="checkPw()" style="margin-top:12px;padding:10px 30px;font-size:1rem;background:#b8960c;color:white;border:none;border-radius:6px;cursor:pointer;font-family:Georgia,serif;">enter</button>
+<p id="pwErr" style="color:#b00;margin-top:8px;font-size:0.9rem;"></p>
 </div>
-<div id="game">
-<div id="phase1">
-<div class="card fadein">
-<div class="portrait" style="margin:0 auto 16px;background:radial-gradient(#2a2040,#1a1a2e);color:#c9a84c;">&#x2696;&#xFE0F;</div>
-<p class="stage-tag">hero's journey - the resurrection</p>
-<h1>The Final Test</h1>
-<p class="sub">the hero must face one last trial before returning home</p>
-<div class="story">
-<p>You are Jean-Jacques Rousseau. You are eight years old.</p>
-<p>The comb is broken. You didn't do it. But your uncle and teacher Lambercier stand before you, demanding a confession. They've already decided you're guilty.</p>
-<p>The beatings have started. Each time you refuse to confess, the punishment gets worse. Rousseau faced physical violence by his Uncle Bernard with <em>"great severity."</em></p>
-<p>Yet you are <em>"resolutely determined to suffer death rather than submit."</em></p>
-<p>In the Hero's Journey, this is the <em>Resurrection</em> - the hero's final and most dangerous test. Everything from the Call to Adventure, through the Road of Trials, has led here.</p>
-<p>You have three paths. only one leads to freedom.</p>
-<div class="journey-note">&#x1F5FA;&#xFE0F; The Resurrection: the hero faces the ultimate ordeal. they must "die" to their old self and be reborn through their choice.</div>
+
+<div id="gameArea" style="display:none;">
+
+<div id="phase1" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px 18px;background:linear-gradient(to bottom,#1a1a2e,#12091e);">
+<div style="max-width:620px;width:100%;text-align:center;">
+<div style="width:130px;height:130px;border-radius:50%;border:5px solid #b8960c;background:radial-gradient(#2a2040,#1a1a2e);display:flex;align-items:center;justify-content:center;font-size:2.8rem;margin:0 auto 16px;color:#c9a84c;">&#9878;&#65039;</div>
+<p style="font-size:0.78rem;color:#7a6a50;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">HERO'S JOURNEY - THE RESURRECTION</p>
+<h1 style="color:#c9a84c;font-size:1.5rem;margin-bottom:4px;">The Final Test</h1>
+<p style="font-style:italic;color:#8a7a60;margin-bottom:20px;font-size:0.9rem;">the hero must face one last trial before returning home</p>
+<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.25);border-radius:10px;padding:22px;margin:16px 0;text-align:left;line-height:1.75;font-size:0.95rem;">
+<p style="margin-bottom:12px;">You are Jean-Jacques Rousseau. You are eight years old.</p>
+<p style="margin-bottom:12px;">The comb is broken. You didn't do it. But your uncle and teacher Lambercier stand before you, demanding a confession. They've already decided you're guilty.</p>
+<p style="margin-bottom:12px;">The beatings have started. Each time you refuse to confess, the punishment gets worse. Rousseau faced physical violence by his Uncle Bernard with <em style="color:#c9a84c;">"great severity."</em></p>
+<p style="margin-bottom:12px;">Yet you are <em style="color:#c9a84c;">"resolutely determined to suffer death rather than submit."</em></p>
+<p style="margin-bottom:12px;">In the Hero's Journey, this is the <em style="color:#c9a84c;">Resurrection</em> - the hero's final and most dangerous test. Everything from the Call to Adventure, through the Road of Trials, has led here.</p>
+<p style="margin-bottom:12px;">You have three paths. Only one leads to freedom.</p>
+<p style="font-size:0.82rem;color:#7a6a50;border-top:1px solid rgba(122,106,80,0.25);padding-top:10px;margin-top:14px;font-style:italic;">The Resurrection: the hero faces the ultimate ordeal. They must "die" to their old self and be reborn through their choice.</p>
 </div>
-<div class="choices">
-<button class="choice" onclick="pick(0)"><strong>A) Confess.</strong> Tell them you broke the comb. The beatings stop. You submit to force - yield to the strongest. "To yield to force is an act of necessity, not of will."</button>
-<button class="choice" onclick="pick(1)"><strong>B) Stay silent.</strong> Don't confess, but don't fight back either. Just endure it. Accept that "it is an empty and contradictory convention that sets up absolute authority and unlimited obedience."</button>
-<button class="choice" onclick="pick(2)"><strong>C) Declare your innocence.</strong> Refuse to confess. Speak your truth. "Thus have I acted; these were my thoughts; such was I."</button>
+<div style="display:flex;flex-direction:column;gap:12px;margin:18px 0;">
+<button id="cA" onclick="pickChoice(0)" style="padding:14px 18px;font-size:0.93rem;font-family:Georgia,serif;border:1px solid rgba(201,168,76,0.2);border-radius:8px;background:rgba(255,255,255,0.03);color:#e0d5c0;cursor:pointer;text-align:left;line-height:1.5;"><strong>A) Confess.</strong> Tell them you broke the comb. The beatings stop. You submit to force - yield to the strongest. "To yield to force is an act of necessity, not of will."</button>
+<button id="cB" onclick="pickChoice(1)" style="padding:14px 18px;font-size:0.93rem;font-family:Georgia,serif;border:1px solid rgba(201,168,76,0.2);border-radius:8px;background:rgba(255,255,255,0.03);color:#e0d5c0;cursor:pointer;text-align:left;line-height:1.5;"><strong>B) Stay silent.</strong> Don't confess, but don't fight back either. Just endure it. Accept that "it is an empty and contradictory convention that sets up absolute authority and unlimited obedience."</button>
+<button id="cC" onclick="pickChoice(2)" style="padding:14px 18px;font-size:0.93rem;font-family:Georgia,serif;border:1px solid rgba(201,168,76,0.2);border-radius:8px;background:rgba(255,255,255,0.03);color:#e0d5c0;cursor:pointer;text-align:left;line-height:1.5;"><strong>C) Declare your innocence.</strong> Refuse to confess. Speak your truth. "Thus have I acted; these were my thoughts; such was I."</button>
 </div>
-<div class="cfb" id="cfb"></div>
+<p id="cFb" style="margin-top:10px;font-style:italic;font-size:0.88rem;min-height:20px;line-height:1.5;"></p>
 </div>
 </div>
-<div id="phase2">
-<div class="decl-card fadein">
-<div class="portrait" style="margin:0 auto 16px;background:radial-gradient(#2a1a0e,#1a1a2e);color:#c9a84c;">&#x1F4DC;</div>
-<p class="stage-tag">hero's journey - return with the elixir</p>
-<h1>Rousseau's Declaration</h1>
-<p class="sub">the hero returns with wisdom. piece together his truth.</p>
-<div class="decl-context">In the Hero's Journey, the hero returns carrying an <em>elixir</em> - the wisdom gained from the adventure. Rousseau's elixir was his <em>Confessions</em> - a declaration of his true self to the world.<br><br>He wrote: <em>"Whenever the last trumpet shall sound, I will present myself before the sovereign judge with this book in my hand, and loudly proclaim, thus have I acted; these were my thoughts; such was I."</em><br><br>Arrange the fragments below in the correct order to build his declaration - from the injustice he suffered, to the truth he discovered, to the freedom he claimed.</div>
-<div class="scroll-area">
-<p class="scroll-label">&#x1F4DC; Rousseau's Declaration</p>
-<div class="declaration-slots" id="slots">
-<div class="decl-slot" id="slot0">1. the injustice...</div>
-<div class="decl-slot" id="slot1">2. the lesson...</div>
-<div class="decl-slot" id="slot2">3. the defiance...</div>
-<div class="decl-slot" id="slot3">4. the elixir...</div>
-<div class="decl-slot" id="slot4">5. the declaration...</div>
-</div>
+
+<div id="phase2" style="display:none;min-height:100vh;background:linear-gradient(to bottom,#12091e,#1a1a2e,#12091e);padding:30px 18px;flex-direction:column;align-items:center;">
+<div style="max-width:660px;width:100%;text-align:center;">
+<div style="width:130px;height:130px;border-radius:50%;border:5px solid #b8960c;background:radial-gradient(#2a1a0e,#1a1a2e);display:flex;align-items:center;justify-content:center;font-size:2.8rem;margin:0 auto 16px;color:#c9a84c;">&#128220;</div>
+<p style="font-size:0.78rem;color:#7a6a50;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">HERO'S JOURNEY - RETURN WITH THE ELIXIR</p>
+<h1 style="color:#c9a84c;font-size:1.5rem;margin-bottom:4px;">Rousseau's Declaration</h1>
+<p style="font-style:italic;color:#8a7a60;margin-bottom:20px;font-size:0.9rem;">the hero returns with wisdom. piece together his truth.</p>
+<div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:16px;margin-bottom:20px;font-size:0.9rem;color:#a09080;line-height:1.6;text-align:left;">In the Hero's Journey, the hero returns carrying an <em style="color:#c9a84c;">elixir</em> - the wisdom gained from the adventure. Rousseau's elixir was his <em style="color:#c9a84c;">Confessions</em> - a declaration of his true self to the world.<br><br>He wrote: <em style="color:#c9a84c;">"Whenever the last trumpet shall sound, I will present myself before the sovereign judge with this book in my hand, and loudly proclaim, thus have I acted; these were my thoughts; such was I."</em><br><br>Arrange the fragments below in the correct order to build his declaration - from the injustice he suffered, to the truth he discovered, to the freedom he claimed.</div>
+<div style="background:rgba(0,0,0,0.25);border:2px solid rgba(201,168,76,0.3);border-radius:12px;padding:25px 20px;margin:16px 0;min-height:180px;">
+<p style="font-size:0.78rem;color:#7a6a50;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;">Rousseau's Declaration</p>
+<div id="slotsArea"></div>
 </div>
 <p style="font-size:0.82rem;color:#7a6a50;margin:10px 0;">click fragments to place them in order. click a placed fragment to remove it.</p>
-<div class="fragment-bank" id="fbank"></div>
-<button class="btn" onclick="checkDecl()">submit declaration</button>
-<div class="decl-feedback" id="dfb"></div>
+<div id="fragBank" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0;padding:14px;border:1px solid rgba(255,255,255,0.08);border-radius:8px;background:rgba(255,255,255,0.02);"></div>
+<button onclick="checkOrder()" style="margin-top:12px;padding:10px 30px;font-size:1rem;background:#b8960c;color:white;border:none;border-radius:6px;cursor:pointer;font-family:Georgia,serif;">submit declaration</button>
+<p id="declFb" style="margin-top:12px;font-weight:bold;min-height:22px;font-size:0.95rem;"></p>
 </div>
 </div>
-<div id="fake-win">
-<div class="fake-box fadein">
-<div class="portrait" style="margin:0 auto 16px;background:radial-gradient(#2a3a1a,#1a1a2e);color:#6abf6a;font-size:2.2rem;">&#x1F54A;&#xFE0F;</div>
-<h1>Freedom to Live</h1>
-<p>Rousseau never confessed. He chose truth over force. And that single act of defiance - a child refusing to lie - became the foundation of everything he believed.</p>
-<div class="win-quote">"Force does not create right, and we are obliged to obey only legitimate power."</div>
-<p>He didn't win with strength. He didn't win with obedience. He won because he refused to let force become truth.</p>
-<p style="margin-top:12px;">As he wrote in his Confessions: <em>"Thus have I acted; these were my thoughts; such was I... sometimes vile and despicable, at others, virtuous, generous and sublime."</em></p>
-<div class="journey-map">
-<p class="map-title">&#x1F5FA;&#xFE0F; The Hero's Journey - Complete</p>
-<div class="step"><strong>Call to Adventure:</strong> The comb breaks. Rousseau is falsely accused. His world of innocence shatters.</div>
-<div class="step"><strong>Crossing the Threshold:</strong> He enters a world of force vs truth. The Carnifex - the butcher.</div>
-<div class="step"><strong>Road of Trials:</strong> Punished without proof. Beaten with "great severity." Yet Rousseau considers himself "triumphant."</div>
-<div class="step"><strong>Master of Two Worlds:</strong> Rousseau reconciles freedom and chains. He declares his true self.</div>
-<div class="step current"><strong>Freedom to Live:</strong> Truth defeats force. The hero returns transformed. He is free.</div>
-</div>
-<p>The broken comb was never about a comb. It was about a boy who learned that <strong style="color:#c9a84c;">truth is the only real power</strong> - and spent his whole life proving it.</p>
-<p style="font-style:italic;color:#7a6a50;margin-top:14px;">"Man is born free, and everywhere he is in chains."</p>
-<div class="congrats-text">&#x1F389; congratulations - you have survived<br>The Trial of the Broken Comb</div>
+
+<div id="twistScreen" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;color:#e0d5c0;">
+<div id="twistInner" style="max-width:580px;width:100%;opacity:0;">
+<h1 style="font-size:2rem;color:#c9a84c;margin-bottom:25px;">...or have you?</h1>
+<p style="font-size:1.05rem;line-height:1.8;margin-bottom:16px;color:#b0a090;">You thought it was over. You thought the chains were broken.</p>
+<p style="font-size:1.05rem;line-height:1.8;margin-bottom:16px;color:#b0a090;">But Rousseau didn't just survive his trial - he spent the rest of his life <em style="color:#c9a84c;">writing about it.</em> His father Isaac was accused by a man named Gautier of drawing his sword on him. Rather than submitting to an unjust imprisonment that would sacrifice his <em style="color:#c9a84c;">"honor and liberty,"</em> Isaac chose voluntary banishment for the rest of his life.</p>
+<p style="font-size:1.05rem;line-height:1.8;margin-bottom:16px;color:#b0a090;">Like father, like son. Neither would submit to force. Neither stayed silent.</p>
+<p style="color:#c9a84c;font-weight:bold;margin-top:8px;font-size:1.05rem;">Now it's your turn. One final challenge remains.</p>
+<br><br>
+<a href="https://forms.gle/KuoiyNciNhbjB4iZ8" target="_blank" style="display:inline-block;margin-top:30px;padding:18px 50px;font-size:1.2rem;font-family:Georgia,serif;font-weight:bold;background:linear-gradient(135deg,#c9a84c,#b8960c);color:#1a1a2e;border:none;border-radius:10px;cursor:pointer;text-decoration:none;letter-spacing:1px;box-shadow:0 4px 20px rgba(201,168,76,0.4);">Face the Final Challenge</a>
 </div>
 </div>
-<div id="twist">
-<div class="twist-content slow-reveal">
-<h1>...or have you?</h1>
-<p>You thought the trial was over. But Rousseau's story doesn't end with the comb.</p>
-<p>His father Isaac was accused by a man named Gautier of drawing his sword on him. Rather than submitting to an <em>unjust imprisonment</em> that would sacrifice his <em>"honor and liberty,"</em> Isaac chose <em>voluntary banishment</em> for the rest of his life.</p>
-<p>Like father, like son. Neither would submit to force.</p>
-<p>Rousseau spent his entire life writing his truth. Now it's your turn.</p>
-<p style="color:#c9a84c; font-weight:bold; margin-top:20px;">One final task remains.</p>
-<a href="https://forms.gle/KuoiyNciNhbjB4iZ8" target="_blank" class="final-link">&#x1F4DC; Write Your Declaration</a>
-<p style="font-size:0.82rem; color:#5a4a3a; margin-top:16px;">click the button above to complete the quest for real</p>
+
 </div>
-</div>
-</div>
+
 <script>
-var PW="Nature";
-var FRAGMENTS=["I was absolutely innocent... the rigor of a dreadful chastisement, inflicted for a crime I had not committed","Force is a tool of tyrants and brigands, not a source of legitimacy","I was immovable, and resolutely determined to suffer death rather than submit","Force does not create right, and we are obliged to obey only legitimate power","Man is born free, and everywhere he is in chains"];
-var SLOT_LABELS=["1. the injustice...","2. the lesson...","3. the defiance...","4. the elixir...","5. the declaration..."];
-var placed=[];
-var fragUsed=[];
-function tryPw(){if(document.getElementById("pw").value.trim().toUpperCase()===PW.toUpperCase()){document.getElementById("pw-screen").style.display="none";document.getElementById("game").style.display="block";document.getElementById("phase1").style.display="flex";}else{document.getElementById("pw-err").textContent="wrong. go back to the last quest";}}
-var didPick=false;
-function pick(n){if(didPick)return;var fb=document.getElementById("cfb");var btns=document.querySelectorAll(".choice");if(n===0){btns[0].classList.add("wrong");fb.textContent="\"To yield to force is an act of necessity, not of will.\" confessing means force wins. the hero cant return if he surrenders.";fb.className="cfb bad";}else if(n===1){btns[1].classList.add("wrong");fb.textContent="silence isnt the answer. Rousseau didnt just endure - he actively declared his truth. the hero must act, not just survive.";fb.className="cfb bad";}else{didPick=true;btns[2].classList.add("right");fb.textContent="the hero is resurrected. truth wins over force. now carry that truth home.";fb.className="cfb good";setTimeout(function(){document.getElementById("phase1").style.display="none";document.getElementById("phase2").style.display="flex";initDecl();window.scrollTo(0,0);},2200);}}
-function initDecl(){placed=[null,null,null,null,null];fragUsed=[false,false,false,false,false];renderSlots();var indices=[0,1,2,3,4];for(var i=indices.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=indices[i];indices[i]=indices[j];indices[j]=tmp;}var bank=document.getElementById("fbank");bank.innerHTML="";for(var i=0;i<indices.length;i++){var fi=indices[i];var frag=document.createElement("div");frag.className="fragment";frag.textContent="\""+FRAGMENTS[fi]+"\"";frag.id="frag-"+fi;frag.setAttribute("data-fi",fi);(function(fi,frag){frag.addEventListener("click",function(){if(fragUsed[fi])return;var slotIdx=-1;for(var s=0;s<placed.length;s++){if(placed[s]===null){slotIdx=s;break;}}if(slotIdx===-1)return;placed[slotIdx]=fi;fragUsed[fi]=true;frag.classList.add("used");renderSlots();});})(fi,frag);bank.appendChild(frag);}}
-function renderSlots(){for(var s=0;s<5;s++){var slot=document.getElementById("slot"+s);if(placed[s]!==null){slot.textContent="\""+FRAGMENTS[placed[s]]+"\"";slot.className="decl-slot filled";(function(s){slot.onclick=function(){var fi=placed[s];placed[s]=null;fragUsed[fi]=false;document.getElementById("frag-"+fi).classList.remove("used");renderSlots();};})(s);}else{slot.textContent=SLOT_LABELS[s];slot.className="decl-slot";slot.onclick=null;}}}
-function checkDecl(){var fb=document.getElementById("dfb");for(var s=0;s<5;s++){if(placed[s]===null){fb.textContent="the declaration isnt complete yet. place all 5 fragments.";fb.className="decl-feedback no";return;}}var correct=true;for(var s=0;s<5;s++){if(placed[s]!==s){correct=false;break;}}if(correct){fb.textContent="the declaration is complete. the hero returns home.";fb.className="decl-feedback yes";setTimeout(function(){document.getElementById("phase2").style.display="none";document.getElementById("fake-win").style.display="flex";window.scrollTo(0,0);spawnChains();setTimeout(function(){document.getElementById("fake-win").classList.add("flicker");setTimeout(function(){document.getElementById("fake-win").style.display="none";document.getElementById("twist").style.display="flex";window.scrollTo(0,0);},900);},8000);},2000);}else{var wrongSlot=-1;for(var s=0;s<5;s++){if(placed[s]!==s){wrongSlot=s;break;}}var hints=["the declaration starts with the injustice - what happened to Rousseau as a child?","after the injustice, what did Rousseau learn about force and tyrants?","the third part is about defiance - how did Rousseau respond to the punishment?","the elixir is the wisdom he brought back - his most famous line about force and right","the declaration ends with his biggest truth about man and freedom"];fb.textContent="not quite. hint: "+hints[wrongSlot];fb.className="decl-feedback no";}}
-function spawnChains(){var win=document.getElementById("fake-win");var emojis=["\u26D3\uFE0F","\uD83D\uDD17","\u26D3\uFE0F","\uD83D\uDD17","\u26D3\uFE0F","\u26D3\uFE0F","\uD83D\uDD17","\u26D3\uFE0F"];for(var i=0;i<emojis.length;i++){var c=document.createElement("div");c.className="chain";c.textContent=emojis[i];c.style.left=(Math.random()*80+10)+"%";c.style.top=(Math.random()*60+20)+"%";c.style.animationDelay=(Math.random()*2)+"s";c.style.fontSize=(1.5+Math.random()*2)+"rem";win.appendChild(c);}}
+var PASSWORD = "Nature";
+var FRAGMENTS = [
+  "I was absolutely innocent... the rigor of a dreadful chastisement, inflicted for a crime I had not committed",
+  "Force is a tool of tyrants and brigands, not a source of legitimacy",
+  "I was immovable, and resolutely determined to suffer death rather than submit",
+  "Force does not create right, and we are obliged to obey only legitimate power",
+  "Man is born free, and everywhere he is in chains"
+];
+var SLOT_LABELS = ["1. the injustice...","2. the lesson...","3. the defiance...","4. the elixir...","5. the declaration..."];
+var placed = [null,null,null,null,null];
+var fragUsed = [false,false,false,false,false];
+var didPick = false;
+
+function checkPw() {
+  var val = document.getElementById("pwInput").value.trim();
+  if (val.toUpperCase() === PASSWORD.toUpperCase()) {
+    document.getElementById("pwScreen").style.display = "none";
+    document.getElementById("gameArea").style.display = "block";
+    document.getElementById("phase1").style.display = "flex";
+  } else {
+    document.getElementById("pwErr").textContent = "wrong. go back to the last quest";
+  }
+}
+document.getElementById("pwInput").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") checkPw();
+});
+
+function pickChoice(n) {
+  if (didPick) return;
+  var fb = document.getElementById("cFb");
+  if (n === 0) {
+    document.getElementById("cA").style.borderColor = "#a03030";
+    document.getElementById("cA").style.background = "rgba(160,48,48,0.08)";
+    fb.textContent = "To yield to force is an act of necessity, not of will. Confessing means force wins.";
+    fb.style.color = "#d07070";
+  } else if (n === 1) {
+    document.getElementById("cB").style.borderColor = "#a03030";
+    document.getElementById("cB").style.background = "rgba(160,48,48,0.08)";
+    fb.textContent = "Silence isnt the answer. Rousseau didnt just endure - he actively declared his truth.";
+    fb.style.color = "#d07070";
+  } else {
+    didPick = true;
+    document.getElementById("cC").style.borderColor = "#3a8a3a";
+    document.getElementById("cC").style.background = "rgba(58,138,58,0.1)";
+    fb.textContent = "The hero is resurrected. Truth wins over force. Now carry that truth home.";
+    fb.style.color = "#6abf6a";
+    setTimeout(function() {
+      document.getElementById("phase1").style.display = "none";
+      document.getElementById("phase2").style.display = "flex";
+      buildDecl();
+      window.scrollTo(0, 0);
+    }, 2200);
+  }
+}
+
+function buildDecl() {
+  placed = [null,null,null,null,null];
+  fragUsed = [false,false,false,false,false];
+  renderSlots();
+  var order = [0,1,2,3,4];
+  for (var i = 4; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = order[i]; order[i] = order[j]; order[j] = t;
+  }
+  var bank = document.getElementById("fragBank");
+  bank.innerHTML = "";
+  for (var i = 0; i < order.length; i++) {
+    var fi = order[i];
+    var btn = document.createElement("div");
+    btn.id = "frag" + fi;
+    btn.textContent = '"' + FRAGMENTS[fi] + '"';
+    btn.style.cssText = "padding:8px 14px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;border-radius:16px;font-size:0.85rem;cursor:pointer;line-height:1.4;";
+    btn.onclick = (function(fi, btn) {
+      return function() {
+        if (fragUsed[fi]) return;
+        for (var s = 0; s < 5; s++) {
+          if (placed[s] === null) {
+            placed[s] = fi;
+            fragUsed[fi] = true;
+            btn.style.opacity = "0.2";
+            btn.style.cursor = "default";
+            renderSlots();
+            return;
+          }
+        }
+      };
+    })(fi, btn);
+    bank.appendChild(btn);
+  }
+}
+
+function renderSlots() {
+  var area = document.getElementById("slotsArea");
+  area.innerHTML = "";
+  for (var s = 0; s < 5; s++) {
+    var div = document.createElement("div");
+    div.style.cssText = "padding:10px 14px;border-radius:6px;min-height:42px;display:flex;align-items:center;font-size:0.88rem;margin-bottom:8px;";
+    if (placed[s] !== null) {
+      div.textContent = '"' + FRAGMENTS[placed[s]] + '"';
+      div.style.border = "1px solid rgba(201,168,76,0.4)";
+      div.style.color = "#c9a84c";
+      div.style.cursor = "pointer";
+      div.style.background = "rgba(201,168,76,0.05)";
+      div.onclick = (function(s) {
+        return function() {
+          var fi = placed[s];
+          placed[s] = null;
+          fragUsed[fi] = false;
+          var el = document.getElementById("frag" + fi);
+          if (el) { el.style.opacity = "1"; el.style.cursor = "pointer"; }
+          renderSlots();
+        };
+      })(s);
+    } else {
+      div.textContent = SLOT_LABELS[s];
+      div.style.border = "1px dashed rgba(201,168,76,0.25)";
+      div.style.color = "#5a4a3a";
+      div.style.fontStyle = "italic";
+    }
+    area.appendChild(div);
+  }
+}
+
+function checkOrder() {
+  var fb = document.getElementById("declFb");
+  for (var s = 0; s < 5; s++) {
+    if (placed[s] === null) {
+      fb.textContent = "Place all 5 fragments first.";
+      fb.style.color = "#d07070";
+      return;
+    }
+  }
+  var ok = true;
+  for (var s = 0; s < 5; s++) {
+    if (placed[s] !== s) { ok = false; break; }
+  }
+  if (ok) {
+    fb.textContent = "The declaration is complete. The hero returns home.";
+    fb.style.color = "#6abf6a";
+    setTimeout(function() {
+      document.getElementById("phase2").style.display = "none";
+      document.getElementById("twistScreen").style.display = "flex";
+      window.scrollTo(0, 0);
+      setTimeout(function() {
+        document.getElementById("twistInner").style.transition = "opacity 1.5s";
+        document.getElementById("twistInner").style.opacity = "1";
+      }, 300);
+    }, 2000);
+  } else {
+    var w = -1;
+    for (var s = 0; s < 5; s++) { if (placed[s] !== s) { w = s; break; } }
+    var h = [
+      "Starts with the injustice - what happened to Rousseau as a child?",
+      "After the injustice, what did he learn about force?",
+      "Third is defiance - how did Rousseau respond?",
+      "The elixir is his most famous line about force and right.",
+      "Ends with his biggest truth about man and freedom."
+    ];
+    fb.textContent = "Not quite. Hint: " + h[w];
+    fb.style.color = "#d07070";
+  }
+}
 </script>
 </body>
 </html>
